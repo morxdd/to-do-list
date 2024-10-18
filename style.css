@@ -1,0 +1,22 @@
+body {
+    background-color: #2a2a2d;
+
+}
+.main-content {
+    background-color: #fa0;
+    width: 32em;
+    padding: 40px 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+
+}
+h1 {    
+    margin: 0;
+    border: 2px solid salmon;
+}
