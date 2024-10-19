@@ -20,8 +20,21 @@ h1 {
     margin: 0;
     border: 2px solid salmon;
 }
+#add-btn {
+    color: #999;
+}
+#add-btn.active {
+    color: #111;
+}
+
+ul {
+    list-style-type: none;
+}
 
 .close-btn {
     height: 1rem;
     background-color: aqua;
+}
+li.completed {
+    text-decoration: line-through;
 }
