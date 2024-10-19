@@ -3,7 +3,7 @@ import { closeIcon } from "./svg-icons.js";
 let inputValue = document.getElementById('todo-input');
 let addButton = document.getElementById('add-btn');
 
-// 監聽 inputValue 輸入事件
+// 監聽 inputValue 輸入事件，add的顏色顯示
 inputValue.addEventListener('input', function () {
     if (inputValue.value.trim() !== '') {
         addButton.classList.add('active');
@@ -23,8 +23,8 @@ addButton.addEventListener('click', function () {
 
 
         // 定義checkbox
-        let newCheckbox = document.createElement('input');
-        newCheckbox.type = 'checkbox';
+        let newCheckbox = document.createElement('button');
+        newCheckbox.className = 'itemCheckbox';
 
         // 定義 X button按鈕 
         let newCloseButton = document.createElement('button')
@@ -36,8 +36,9 @@ addButton.addEventListener('click', function () {
         // 去除輸入值的前後空白
         let trimmedInputValue = inputValue.value.trim();
         // 定義 text，把修剪過的輸入值拿來用
-        let newItemText = document.createTextNode(trimmedInputValue);
-
+        let newItemText = document.createElement('div');
+        newItemText.innerHTML = trimmedInputValue;
+        newItemText.className = "item-text"
 
         // li的內容加入checkbox text button
         newTodoListItem.appendChild(newCheckbox);
@@ -50,17 +51,23 @@ addButton.addEventListener('click', function () {
         todoList.appendChild(newTodoListItem);
         // 清空輸入框
         inputValue.value = '';
+        addButton.classList.remove('active');
 
         newCloseButton.addEventListener('click', function () {
             // alert('刪除：' + newTodoListItem.innerText );
             newTodoListItem.remove();
         })
         // 監聽 checkbox
-        newCheckbox.addEventListener('change', function () {
-            if (newCheckbox.checked) {
-                newTodoListItem.classList.add('completed')
+        // 定義一個模擬的 checkbox 狀態
+        let isChecked = false;
+        newCheckbox.addEventListener('click', function () {
+            isChecked = !isChecked;
+            if(isChecked){
+                newTodoListItem.classList.add('completed');
+                newCheckbox.classList.add('checked');
             } else {
-                newTodoListItem.classList.remove('completed')
+                newTodoListItem.classList.remove('completed');
+                newCheckbox.classList.remove('checked');
             }
         })
     }
