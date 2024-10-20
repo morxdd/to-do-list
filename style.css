@@ -11,16 +11,14 @@ button {
     background-color: #ddd;
     width: 20em;
     padding: 40px 60px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
     /* align-items: center; */
     gap: 8px;
     border-radius: 24px;
+    margin: 20% auto;
+    
 
 }
 
@@ -84,7 +82,7 @@ li {
     justify-content: space-between;
     font-size: 20px;
     gap: 8px;
-    height: 40px;
+    height: 60px;
 }
 
 .itemCheckbox {
@@ -119,6 +117,8 @@ li.completed {
     /* width: 100%; */
     /* text-align: left; */
     flex-grow: 1;
+    overflow-wrap: break-word;
+    width: 72%;
 }
 
 .close-btn {
@@ -131,6 +131,8 @@ li.completed {
     justify-content: center;
     border-radius: 200px;
     padding: 2px;
+    width: 32px;
+    height: 32px;
 }
 .close-btn:hover {
     background-color: #ccc;

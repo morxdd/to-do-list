@@ -53,8 +53,8 @@ addButton.addEventListener('click', function () {
         inputValue.value = '';
         addButton.classList.remove('active');
 
+        // 監聽 close 按鈕
         newCloseButton.addEventListener('click', function () {
-            // alert('刪除：' + newTodoListItem.innerText );
             newTodoListItem.remove();
         })
         // 監聽 checkbox
@@ -62,7 +62,7 @@ addButton.addEventListener('click', function () {
         let isChecked = false;
         newCheckbox.addEventListener('click', function () {
             isChecked = !isChecked;
-            if(isChecked){
+            if (isChecked) {
                 newTodoListItem.classList.add('completed');
                 newCheckbox.classList.add('checked');
             } else {
@@ -70,6 +70,13 @@ addButton.addEventListener('click', function () {
                 newCheckbox.classList.remove('checked');
             }
         })
+    }
+})
+
+// 監聽 input，鍵入Enter，執行點擊動作
+inputValue.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter' && !event.isComposing) {
+        addButton.click();
     }
 })
 
