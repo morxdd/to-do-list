@@ -20,6 +20,7 @@ addButton.addEventListener('click', function () {
         console.log(inputValue.value);
         // 定義 li
         let newTodoListItem = document.createElement('li');
+        newTodoListItem.draggable = "true";
 
 
         // 定義checkbox
@@ -44,6 +45,7 @@ addButton.addEventListener('click', function () {
         newTodoListItem.appendChild(newCheckbox);
         newTodoListItem.appendChild(newItemText);
         newTodoListItem.appendChild(newCloseButton);
+
 
         // 抓取 ul 
         let todoList = document.getElementById('todo-list');
@@ -70,6 +72,27 @@ addButton.addEventListener('click', function () {
                 newCheckbox.classList.remove('checked');
             }
         })
+
+        // 拖動功能
+        // 監聽項目的開始拖動
+        newTodoListItem.addEventListener('dragstart', function (e) {
+            newTodoListItem.classList.add('dragging');
+        })
+        // 監聽項目的結束拖動
+        newTodoListItem.addEventListener('dragend', function(e){
+            newTodoListItem.classList.remove('dragging');
+        })
+
+        document.querySelectorAll('li').forEach(item => {
+            item.addEventListener('dragover', function(e){
+                // 允許放置
+                e.preventDefault();
+            
+                const draggingItem = document.querySelector('.dragging');
+                this.parentNode.insertBefore(draggingItem, this);
+            })
+        })
+
     }
 })
 
@@ -79,6 +102,7 @@ inputValue.addEventListener('keydown', function (event) {
         addButton.click();
     }
 })
+
 
 
 
