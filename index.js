@@ -115,6 +115,30 @@ addButton.addEventListener('click', function () {
         // 監聽項目的結束拖動
         newTodoListItem.addEventListener('dragend', function (e) {
             newTodoListItem.classList.remove('dragging');
+            updateTodosOrder(); // 更新todos陣列和localStorage
+
+            function updateTodosOrder() {
+                const todoListItems = document.querySelectorAll('li'); // 獲取所有 li 元素
+                const newTodos = []; // 用來存放重新排序後的 todos
+
+                todoListItems.forEach(item => {
+                    const textElement = item.querySelector('.item-text');
+                    if (textElement) {
+                        // console.log('找到 item-text: ', textElement.innerText);
+                        const text = textElement.innerText; // 獲取每個項目的文字
+                        const matchedTodo = todos.find(todo => todo.text === text); // 找到對應的待辦事項
+                        // console.log(matchedTodo);
+                        
+                        newTodos.push(matchedTodo); // 按新的順序推入新的陣列
+                    } else {
+                        console.warn('找不到 item-text，可能有問題的 li 元素: ', item);
+                    }
+                });
+
+                // 更新todos陣列和localStorage
+                todos = newTodos;
+                localStorage.setItem('todos', JSON.stringify(todos)); // 更新 localStorage
+            }
         });
         // 為新增的 li 添加 dragover 事件
         newTodoListItem.addEventListener('dragover', function (e) {
