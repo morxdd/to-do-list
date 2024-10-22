@@ -168,6 +168,89 @@ inputValue.addEventListener('keydown', function (event) {
     }
 })
 
+// 讀取並顯示待辦事項
+window.addEventListener('DOMContentLoaded', function () {
+    let todoList = document.getElementById('todo-list');
+    
+    todos.forEach(todo => {
+        // 定義 li
+        let newTodoListItem = document.createElement('li');
+        newTodoListItem.draggable = "true";
+
+        // 定義 checkbox
+        let newCheckbox = document.createElement('button');
+        newCheckbox.className = 'itemCheckbox';
+
+        // 定義 X button 按鈕 
+        let newCloseButton = document.createElement('button');
+        newCloseButton.className = 'close-btn';
+        newCloseButton.innerHTML = closeIcon;
+
+        // 定義 text，把 todo.text 拿來用
+        let newItemText = document.createElement('div');
+        newItemText.innerHTML = todo.text;
+        newItemText.className = "item-text";
+
+        // li 的內容加入 checkbox, text, close button
+        newTodoListItem.appendChild(newCheckbox);
+        newTodoListItem.appendChild(newItemText);
+        newTodoListItem.appendChild(newCloseButton);
+
+        // 如果已完成，增加對應樣式
+        if (todo.completed) {
+            newTodoListItem.classList.add('completed');
+            newCheckbox.classList.add('checked');
+        }
+
+        // 將 li 加入到 ul
+        todoList.appendChild(newTodoListItem);
+
+        // 監聽 close 按鈕
+        newCloseButton.addEventListener('click', function () {
+            let todoIndex = todos.findIndex(t => t.text === todo.text);
+            todos.splice(todoIndex, 1);  // 刪除對應的項目
+            localStorage.setItem('todos', JSON.stringify(todos));  // 更新 localStorage
+            newTodoListItem.remove();  // 從 UI 上移除項目
+        });
+
+        // 監聽 checkbox
+        newCheckbox.addEventListener('click', function () {
+            let todoIndex = todos.findIndex(t => t.text === todo.text);
+            todos[todoIndex].completed = !todos[todoIndex].completed;  // 切換完成狀態
+            localStorage.setItem('todos', JSON.stringify(todos));  // 更新 localStorage
+
+            // 更新樣式
+            if (todos[todoIndex].completed) {
+                newTodoListItem.classList.add('completed');
+                newCheckbox.classList.add('checked');
+            } else {
+                newTodoListItem.classList.remove('completed');
+                newCheckbox.classList.remove('checked');
+            }
+        });
+
+        // 拖動功能（可以重用你現有的拖動邏輯）
+        newTodoListItem.addEventListener('dragstart', function (e) {
+            newTodoListItem.classList.add('dragging');
+        });
+
+        newTodoListItem.addEventListener('dragend', function (e) {
+            newTodoListItem.classList.remove('dragging');
+            updateTodosOrder(); // 更新 todos 陣列和 localStorage
+        });
+
+        newTodoListItem.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            const draggingItem = document.querySelector('.dragging');
+            const isLastItem = this === todoList.lastChild;
+            if (isLastItem) {
+                todoList.appendChild(draggingItem);
+            } else {
+                this.parentNode.insertBefore(draggingItem, this);
+            }
+        });
+    });
+});
 
 
 
