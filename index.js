@@ -3,6 +3,9 @@ import { closeIcon } from "./svg-icons.js";
 let inputValue = document.getElementById('todo-input');
 let addButton = document.getElementById('add-btn');
 
+// 定義 空陣列 用來存放待辦事項
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
 // 監聽 inputValue 輸入事件，add的顏色顯示
 inputValue.addEventListener('input', function () {
     if (inputValue.value.trim() !== '') {
@@ -17,7 +20,7 @@ inputValue.addEventListener('input', function () {
 addButton.addEventListener('click', function () {
     if (inputValue.value.trim() !== '') {
 
-        console.log(inputValue.value);
+
         // 定義 li
         let newTodoListItem = document.createElement('li');
         newTodoListItem.draggable = "true";
@@ -36,6 +39,19 @@ addButton.addEventListener('click', function () {
 
         // 去除輸入值的前後空白
         let trimmedInputValue = inputValue.value.trim();
+
+        // 創建新待辦事項物件
+        let newTodo = {
+            text: trimmedInputValue,
+            completed: false // 初始狀態未完成
+        };
+
+        // 將待辦事項加入陣列
+        todos.push(newTodo);
+        // 將陣列轉換為字串，並存入 localStorage
+        localStorage.setItem('todos', JSON.stringify(todos));
+
+
         // 定義 text，把修剪過的輸入值拿來用
         let newItemText = document.createElement('div');
         newItemText.innerHTML = trimmedInputValue;
@@ -51,20 +67,37 @@ addButton.addEventListener('click', function () {
         let todoList = document.getElementById('todo-list');
         // 新增剛剛建立好的 li
         todoList.appendChild(newTodoListItem);
+
+
         // 清空輸入框
         inputValue.value = '';
         addButton.classList.remove('active');
 
         // 監聽 close 按鈕
         newCloseButton.addEventListener('click', function () {
+            let todoIndex = todos.findIndex(todo => todo.text === trimmedInputValue)
+            // 從陣列中刪除
+            todos.splice(todoIndex, 1);
+            // 更新 localStorage
+            localStorage.setItem('todos', JSON.stringify(todos));
+
+
             newTodoListItem.remove();
         })
         // 監聽 checkbox
         // 定義一個模擬的 checkbox 狀態
-        let isChecked = false;
+        // let isChecked = false; //這是臨時變數 改為使用localStoage 的物件
         newCheckbox.addEventListener('click', function () {
-            isChecked = !isChecked;
-            if (isChecked) {
+            // 尋找該項目在將存入 localStorage 中的索引
+            let todoIndex = todos.findIndex(todo => todo.text === trimmedInputValue);
+
+            // alert(todoIndex)
+            // 切換 completed 狀態
+            todos[todoIndex].completed = !todos[todoIndex].completed;
+            // 更新 localStorage
+            localStorage.setItem('todos', JSON.stringify(todos));
+
+            if (todos[todoIndex].completed) {
                 newTodoListItem.classList.add('completed');
                 newCheckbox.classList.add('checked');
             } else {
@@ -77,21 +110,29 @@ addButton.addEventListener('click', function () {
         // 監聽項目的開始拖動
         newTodoListItem.addEventListener('dragstart', function (e) {
             newTodoListItem.classList.add('dragging');
-        })
+        });
+
         // 監聽項目的結束拖動
-        newTodoListItem.addEventListener('dragend', function(e){
+        newTodoListItem.addEventListener('dragend', function (e) {
             newTodoListItem.classList.remove('dragging');
+        });
+        // 為新增的 li 添加 dragover 事件
+        newTodoListItem.addEventListener('dragover', function (e) {
+            // 允許放置
+            e.preventDefault();
+
+            const draggingItem = document.querySelector('.dragging');
+            // 獲取父元素 ul
+            const todoList = this.parentNode;
+            const isLastItem = this === todoList.lastChild;
+
+            if (isLastItem) {
+                todoList.appendChild(draggingItem)
+            } else {
+                this.parentNode.insertBefore(draggingItem, this);
+            }
         })
 
-        document.querySelectorAll('li').forEach(item => {
-            item.addEventListener('dragover', function(e){
-                // 允許放置
-                e.preventDefault();
-            
-                const draggingItem = document.querySelector('.dragging');
-                this.parentNode.insertBefore(draggingItem, this);
-            })
-        })
 
     }
 })
